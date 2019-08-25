@@ -28,7 +28,7 @@ class MealDetailScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(10)),
         margin: EdgeInsets.all(8),
         padding: EdgeInsets.all(8),
-        height: 200,
+        // height: 200,
         width: double.infinity,
         child: child,
       );
@@ -38,50 +38,62 @@ class MealDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('${meal.title}'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                meal.imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
-            buildSectionTitle(context, 'Ingredients'),
-            buildContainer(
-              ListView.builder(
-                itemCount: meal.ingredients.length,
-                itemBuilder: (ctx, index) => Card(
-                  color: Theme.of(ctx).accentColor,
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      '${meal.ingredients[index]}',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            buildContainer(
-              ListView.builder(
-                itemCount: meal.steps.length,
-                itemBuilder: (ctx, index) => Column(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
                   children: <Widget>[
-                    ListTile(
-                      leading: CircleAvatar(
-                        child: Text('${(index + 1)}'),
+                    Container(
+                      // height: 300,
+                      width: double.infinity,
+                      child: Image.network(
+                        meal.imageUrl,
+                        fit: BoxFit.cover,
                       ),
-                      title: Text('${meal.steps[index]}'),
                     ),
-                    Divider(),
+                    buildSectionTitle(context, 'Ingredients'),
+                    buildContainer(
+                      ListView.builder(
+                        itemCount: meal.ingredients.length,
+                        itemBuilder: (ctx, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '• ${meal.ingredients[index]}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        },
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                      ),
+                    ),
+                    buildContainer(
+                      ListView.builder(
+                        itemCount: meal.steps.length,
+                        itemBuilder: (ctx, index) => Column(
+                          children: <Widget>[
+                            ListTile(
+                              leading: CircleAvatar(
+                                child: Text('${(index + 1)}'),
+                              ),
+                              title: Text('${meal.steps[index]}'),
+                            ),
+                            Divider(),
+                          ],
+                        ),
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                      ),
+                    )
                   ],
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
